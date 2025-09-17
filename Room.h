@@ -3,23 +3,26 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 #include "Exit.h"
-#include "LinkedRoom.h"
+#include "Item.h"
+
 
 using namespace std;
 
 class Room {
  public:
   Room();
-  void setDescription(char*);
+  Room(const char nDescription[200]);
+  void setDescription(const char nDescription[200]);
   char* getDescription();
 
-  void addLinkedRoom(LinkedRoom nLR);
-  vector<LinkedRoom> getLinkedRooms();
+  void addLinkedRoom(Room* nRoom, Exit e);
+  vector<map<Exit, Room*>> getLinkedRooms();
 
  private:
-  char* decription;
-  vector<LinkedRoom> linkedRooms;
+  char* description;
+  vector<map<Exit, Room*>> linkedRooms;
 
 };
 
