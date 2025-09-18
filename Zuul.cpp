@@ -10,7 +10,7 @@ using namespace std;
 
 bool isValidInput(char* input);
 
-int main() {
+int main() { 
 
   vector<char*> inventory;  
   vector<Room> rooms;
@@ -21,55 +21,64 @@ int main() {
 
   r1 -> addLinkedRoom(r2, NORTH);
   r2 -> addLinkedRoom(r1, SOUTH);
-
+  r1 -> addLinkedRoom(r2, EAST);
   r1 -> addItem("BROOM");
   r1 -> addItem("CHAIR");
-  
-  cout << (((r1 -> getLinkedRooms()).at(0).at(NORTH)) -> getDescription()) << endl;
 
   cout << "Items in Room 1:" << endl;
   r1 -> printItems();
 
-  char* tempItem = r1 -> removeItem("OVAL");
-
-  cout << "Items in Room 1:" << endl;
-  r1 -> printItems();
-
-  tempItem = r1 -> removeItem("BROOM");
-
-  cout << "Items in Room 1:" << endl;
-  r1 -> printItems();
-  
-
+  r1 -> printRoom();
   
   char* input = new char[80];
-  strcpy(input, "GET north");
-  bool n = isValidInput(input);
 
+  //get input and check keyword validity
+  do {
+    if (cin.fail()) {
+      cin.clear();
+      cin.ignore(10000, '\n');
+    }
+    cout << "Enter command (HELP): " << endl;
+    cin.get(input, 80);
+    cin.get();
+    
+  } while (!isValidInput(input));
 
+  
+  
   return 0;
 }
 
 bool isValidInput(char* input) {
-  //if there is no space its invalid by default
-  if (strchr(input, ' ') == NULL) {
-    return false;
+  char* inKey = new char[sizeof(input)];  
+  
+  if (strchr(input, ' ') != NULL) {
+    strncpy(inKey, input, strchr(input, ' ') - input);  
   }
-
-  //isolate the keyword of the input
-  char* inKey = new char[sizeof(input)];
-  strncpy(inKey, input, strchr(input, ' ') - input);
+  else {
+    strcpy(inKey, input);
+  }
+  
   cout << inKey << endl;
-
   
   /*
     VALID KEYWORDS:
+    - HELP
     - GO
     - GET
     - DROP
     - INVENTORY
     - QUIT
    */
+  if (strcmp(inKey, "HELP") == 0) {
+    cout << "List of valid commands:" << endl;
+    cout << " - GO" << endl;
+    cout << " - GET" << endl;
+    cout << " - DROP" << endl;
+    cout << " - INVENTORY" << endl;
+    cout << " - QUIT" << endl;
+    return false;
+  }
   if (strcmp(inKey, "GO") == 0) {
     return true;
   }

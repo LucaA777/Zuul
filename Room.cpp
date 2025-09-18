@@ -27,12 +27,10 @@ char* Room::getDescription() {
   
 
 void Room::addLinkedRoom(Room* nRoom, Exit e) {
-  map<Exit, Room*>* m = new map<Exit, Room*>();
-  m -> insert({e, nRoom});
-  linkedRooms.push_back(*m);
+  linkedRooms.insert({e, nRoom});
 }
 
-vector<map<Exit, Room*>> Room::getLinkedRooms() {
+map<Exit, Room*> Room::getLinkedRooms() {
   return linkedRooms;
 }
 
@@ -70,6 +68,22 @@ vector<char*> Room::getItems() {
 
 void Room::printItems() {
   for (char* i : items) {
-    cout << i << endl;
+    cout << i << " ";
   }
+  cout << endl;
+}
+
+void Room::printRoom() {
+  cout << description << endl << endl;
+  cout << "There are exits:" << endl;
+  
+  for (auto e : linkedRooms) {
+    cout << (e.first == 0 ? "NORTH" : (e.first == 1 ? "EAST" : (e.first == 2 ? "SOUTH" : "WEST"))) << " ";
+  }
+
+  cout << endl << endl;
+
+  cout << "There are items:" << endl;
+  printItems();
+  
 }
