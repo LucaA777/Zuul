@@ -3,7 +3,6 @@
 #include <vector>
 #include <map>
 #include "Exit.h"
-#include "Item.h"
 #include "Room.h"
 
 
@@ -13,7 +12,7 @@ bool isValidInput(char* input);
 
 int main() {
 
-  vector<Item> inventory;  
+  vector<char*> inventory;  
   vector<Room> rooms;
 
   //define and setup all the rooms
@@ -23,7 +22,25 @@ int main() {
   r1 -> addLinkedRoom(r2, NORTH);
   r2 -> addLinkedRoom(r1, SOUTH);
 
+  r1 -> addItem("BROOM");
+  r1 -> addItem("CHAIR");
+  
   cout << (((r1 -> getLinkedRooms()).at(0).at(NORTH)) -> getDescription()) << endl;
+
+  cout << "Items in Room 1:" << endl;
+  r1 -> printItems();
+
+  char* tempItem = r1 -> removeItem("OVAL");
+
+  cout << "Items in Room 1:" << endl;
+  r1 -> printItems();
+
+  tempItem = r1 -> removeItem("BROOM");
+
+  cout << "Items in Room 1:" << endl;
+  r1 -> printItems();
+  
+
   
   char* input = new char[80];
   strcpy(input, "GET north");

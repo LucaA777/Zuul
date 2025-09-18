@@ -4,15 +4,8 @@
 #include <map>
 #include "Room.h"
 #include "Exit.h"
-#include "Item.h"
-
 
 using namespace std;
-
-Room::Room() {
-  
-}
-
 
 /*
 The reasoning for the use of the const keyword was found at
@@ -41,4 +34,42 @@ void Room::addLinkedRoom(Room* nRoom, Exit e) {
 
 vector<map<Exit, Room*>> Room::getLinkedRooms() {
   return linkedRooms;
+}
+
+void Room::addItem(const char nName[25]) {
+  char* name = new char[25];
+  strcpy(name, nName);
+  items.push_back(name);
+}
+
+void Room::addItem(char* nName) {
+  char* name = new char[25];
+  strcpy(name, nName);
+  items.push_back(name);
+}
+
+char* Room::removeItem(char* nName) {
+  //loop through items to see if it exists
+  vector<char*>::iterator it;
+  
+  for (int i = 0; i < items.size(); i++) {
+    if (strcmp(items.at(i), nName) == 0) {
+      //item found
+      items.erase(items.begin() + i);
+      return nName;
+    }
+  }
+
+  //no matches
+  return NULL;
+}
+
+vector<char*> Room::getItems() {
+  return items;
+}
+
+void Room::printItems() {
+  for (char* i : items) {
+    cout << i << endl;
+  }
 }
