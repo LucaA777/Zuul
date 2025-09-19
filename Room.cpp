@@ -31,6 +31,12 @@ void Room::addLinkedRoom(Room* nRoom, const char nExit[20]) {
   linkedRooms.insert({exit, nRoom});
 }
 
+void Room::removeLinkedRoom(const char nExit[20]) {
+  char* exit = new char[20];
+  strcpy(exit, nExit);
+  linkedRooms.erase(exit);
+}
+
 map<char*, Room*> Room::getLinkedRooms() {
   return linkedRooms;
 }

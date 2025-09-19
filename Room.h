@@ -16,6 +16,7 @@ class Room {
   char* getDescription();
 
   void addLinkedRoom(Room* nRoom, const char nExit[20]);
+  void removeLinkedRoom(const char nExit[20]);
   map<char*, Room*> getLinkedRooms();
   void printExits();
   
