@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include "Exit.h"
 
 using namespace std;
 
@@ -16,8 +15,9 @@ class Room {
   void setDescription(const char nDescription[200]);
   char* getDescription();
 
-  void addLinkedRoom(Room* nRoom, Exit e);
-  map<Exit, Room*> getLinkedRooms();
+  void addLinkedRoom(Room* nRoom, const char nExit[20]);
+  map<char*, Room*> getLinkedRooms();
+  void printExits();
   
   void addItem(const char nName[25]);
   void addItem(char* nName);
@@ -31,7 +31,7 @@ class Room {
   
   char* description;
 
-  map<Exit, Room*> linkedRooms;
+  map<char*, Room*> linkedRooms;
 
   vector<char*> items;
 };

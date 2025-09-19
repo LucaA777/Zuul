@@ -3,7 +3,6 @@
 #include <vector>
 #include <map>
 #include "Room.h"
-#include "Exit.h"
 
 using namespace std;
 
@@ -26,12 +25,28 @@ char* Room::getDescription() {
 }
   
 
-void Room::addLinkedRoom(Room* nRoom, Exit e) {
-  linkedRooms.insert({e, nRoom});
+void Room::addLinkedRoom(Room* nRoom, const char nExit[20]) {
+  char* exit = new char[20];
+  strcpy(exit, nExit);
+  linkedRooms.insert({exit, nRoom});
 }
 
-map<Exit, Room*> Room::getLinkedRooms() {
+map<char*, Room*> Room::getLinkedRooms() {
   return linkedRooms;
+}
+
+void Room::printExits() {
+  //if there aren't any exits (which is a bigger problem), tell the user
+  if (linkedRooms.empty()) {
+    cout << "There are no exits." << endl;
+    return;
+  }
+  cout << "There are exits:" << endl;
+  
+  for (auto e : linkedRooms) {
+    cout << e.first << " ";
+  }
+  cout << endl;
 }
 
 void Room::addItem(const char nName[25]) {
@@ -48,8 +63,6 @@ void Room::addItem(char* nName) {
 
 char* Room::removeItem(char* nName) {
   //loop through items to see if it exists
-  vector<char*>::iterator it;
-  
   for (int i = 0; i < items.size(); i++) {
     if (strcmp(items.at(i), nName) == 0) {
       //item found
@@ -67,6 +80,13 @@ vector<char*> Room::getItems() {
 }
 
 void Room::printItems() {
+  if (items.empty()) {
+    cout << "There are no items." << endl;
+    return;
+  }
+  
+  cout << "There are items:" << endl;
+
   for (char* i : items) {
     cout << i << " ";
   }
@@ -75,15 +95,12 @@ void Room::printItems() {
 
 void Room::printRoom() {
   cout << description << endl << endl;
-  cout << "There are exits:" << endl;
   
-  for (auto e : linkedRooms) {
-    cout << (e.first == 0 ? "NORTH" : (e.first == 1 ? "EAST" : (e.first == 2 ? "SOUTH" : "WEST"))) << " ";
-  }
+  printExits();
+  cout << endl;
 
-  cout << endl << endl;
-
-  cout << "There are items:" << endl;
+  
   printItems();
+  cout << endl;
   
 }
