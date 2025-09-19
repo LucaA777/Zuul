@@ -81,11 +81,11 @@ vector<char*> Room::getItems() {
 
 void Room::printItems() {
   if (items.empty()) {
-    cout << "There are no items." << endl;
+    cout << "There are no items in this room." << endl;
     return;
   }
   
-  cout << "There are items:" << endl;
+  cout << "Room has items:" << endl;
 
   for (char* i : items) {
     cout << i << " ";

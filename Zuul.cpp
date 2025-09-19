@@ -12,6 +12,7 @@ void printInventory(vector<char*> inventory);
 
 int main() { 
 
+  //create player information variables
   vector<char*> inventory;  
   Room* currentRoom = NULL;
 
@@ -25,29 +26,38 @@ int main() {
   r1 -> addItem("BROOM");
   r1 -> addItem("CHAIR");
 
-  
-  currentRoom = r1;
-  
+
+
+  //setup for input
   char* input = new char[80];
 
-  currentRoom -> printRoom();
+  //setup current room
+  currentRoom = r1;
   cout << endl << endl;
+  currentRoom -> printRoom();
+  cout << endl;
+
+  
   //game loop
   do {
    
-    //get input and check keyword validity
+    //get input
     if (cin.fail()) {
       cin.clear();
       cin.ignore(10000, '\n');
     }
-    cout << "Enter command (HELP): " << endl;
+    
+    cout << "Enter command ('HELP' for instruction): " << endl;
     cin.get(input, 80);
     cin.get();
 
+    cout << endl;
+
+    //process input
     processInput(input, currentRoom, inventory);
     
   } while (strcmp(input, "QUIT") != 0);
-  
+
   return 0;
 }
 
@@ -88,7 +98,7 @@ void processInput(char* input, Room* &room, vector<char*> &inventory) {
   }
 
 
-  
+  //process "GO"
   if (strcmp(inKey, "GO") == 0 && hasSpace) {
     //checks if the exit matches an exit of the room
     char* exit = new char[20];
@@ -101,7 +111,9 @@ void processInput(char* input, Room* &room, vector<char*> &inventory) {
       if (strcmp(e.first, exit) == 0) {
 	//exit matched, update the new room, print new room
 	room = e.second;
+	cout << endl;
 	room -> printRoom();
+	cout << endl;
 	return;
       }
     }
@@ -109,12 +121,12 @@ void processInput(char* input, Room* &room, vector<char*> &inventory) {
     //no rooms matched, reprint exits
     cout << "That's not an exit!" << endl;
     room -> printExits();
-    
+    cout << endl;
     return;
   }
 
 
-  
+  //process "GET"
   if (strcmp(inKey, "GET") == 0 && hasSpace) {
     //checks if the item matches an item in the room
     char* item = new char[20];
@@ -122,22 +134,31 @@ void processInput(char* input, Room* &room, vector<char*> &inventory) {
     //technically, the user could put GET _______ BROOM, and that would work.
     strcpy(item, strrchr(input, ' ') + 1); 
 
+    //function removes item if it exits and returns it
     char* tempItem = room -> removeItem(item);
     
     if (tempItem != NULL) {
+      //if the item was in the room, add it to inventory
       inventory.push_back(tempItem);
+
+      cout << endl;
+      printInventory(inventory);
+      cout << endl;
+      room -> printItems();
+      cout << endl;
     }
     else {
       //no matching item
       cout << "That's not in this room!" << endl;
       room -> printItems();
+      cout << endl;
     }
     
     return;
   }
 
 
-  
+  //process "DROP"
   if (strcmp(inKey, "DROP") == 0 && hasSpace) {
     //checks if the item is in the inventory
     char* item = new char[20];
@@ -150,6 +171,12 @@ void processInput(char* input, Room* &room, vector<char*> &inventory) {
 	//item matched, update the new room and inventory
 	room -> addItem(inventory.at(i));
 	inventory.erase(inventory.begin() + i);
+
+	cout << endl;
+	printInventory(inventory);
+	cout << endl;
+	room -> printItems();
+	cout << endl;
 	return;
       }
     }
@@ -157,19 +184,20 @@ void processInput(char* input, Room* &room, vector<char*> &inventory) {
     //item not in inventory
     cout << "You don't have that!" << endl;
     printInventory(inventory);
-
+    cout << endl;
     return;
   }
 
 
-  
+  //process "INVENTORY"
   if (strcmp(inKey, "INVENTORY") == 0 && !hasSpace) {
     printInventory(inventory);
+    cout << endl;
     return;
   }
 
 
-  
+  //process "QUIT"
   if (strcmp(inKey, "QUIT") == 0 && !hasSpace) {
     return;
   }
