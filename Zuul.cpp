@@ -2,7 +2,6 @@
 #include <cstring>
 #include <vector>
 #include <map>
-#include <algorithm>
 #include "Room.h"
 
 
@@ -88,7 +87,9 @@ int main() {
   HallA -> addLinkedRoom(MainSpace, "WEST");
   HallA -> addLinkedRoom(ObservationDeck, "EAST");
 
+  ObservationDeck -> addLinkedRoom(HallA, "WEST");
 
+  
   //add items to rooms
   Storage1 -> addItem("SPACE_FOOD");
   Storage1 -> addItem("HYDRATION_PACK");
@@ -110,11 +111,23 @@ int main() {
   //setup for input
   char* input = new char[80];
 
+  cout << endl << "You wake up with a jolt. The alarms are blaring." << endl;
+  cout << "Quickly, you remove yourself from the straps that" << endl;
+  cout << "hold you to the wall. Where are you? Right, you're" << endl;
+  cout << "on a space station in orbit right now." << endl << endl;
+  cout << "OBJECTIVE: find a way out of the space station as fast as possible." << endl << endl;
+
+  
   //setup current room
   currentRoom = Dorm1;
   cout << endl << endl;
   currentRoom -> printRoom();
   cout << endl;
+
+  //setup room dependencies checks
+  bool openedID = false; //ID_CARD
+  bool openedSS = false; //SPACE_SUIT
+  bool openedSK = false; //SHUTTLE_KEY
 
   
   //game loop
@@ -137,53 +150,73 @@ int main() {
 
 
     //update room-item dependencies
-    auto it1 = find(inventory.begin(), inventory.end(), "ID_CARD");
+    bool hasID_CARD = false;
+    bool hasSPACE_SUIT = false;
+    bool hasSHUTTLE_KEY = false;
 
-    if (it1 != inventory.end()) {
+    //check if the inventory contains the items
+    for (char* i : inventory) {
+      if (strcmp(i, "ID_CARD") == 0) {
+	hasID_CARD = true;
+      }
+      if (strcmp(i, "SPACE_SUIT") == 0) {
+	hasSPACE_SUIT = true;
+      }
+      if (strcmp(i, "SHUTTLE_KEY") == 0) {
+	hasSHUTTLE_KEY = true;
+      }
+    }
+
+    //update room exits
+    if (hasID_CARD && !openedID) {
       //means the player has the ID_CARD
       HallA -> addLinkedRoom(BioLab, "NORTH");
       HallA -> addLinkedRoom(Airlock, "SOUTH");
       BioLab -> addLinkedRoom(HallA, "SOUTH");
       Airlock -> addLinkedRoom(HallA, "NORTH");
       ObservationDeck -> addLinkedRoom(HallD, "EAST");
-      HallD -> addLinkedRoom(ObservationDeck, "WEST"); 
+      HallD -> addLinkedRoom(ObservationDeck, "WEST");
+      openedID = true;
     }
-    else {
+    else if (!hasID_CARD && openedID) {
       //the player doesn't have the ID_CARD;
       HallA -> removeLinkedRoom("NORTH");
       HallA -> removeLinkedRoom("SOUTH");
       BioLab -> removeLinkedRoom("SOUTH");
       Airlock -> removeLinkedRoom("NORTH");
       ObservationDeck -> removeLinkedRoom("EAST");
-      HallD -> removeLinkedRoom("WEST"); 
+      HallD -> removeLinkedRoom("WEST");
+      openedID = false;
     }
 
-    auto it2 = find(inventory.begin(), inventory.end(), "SPACE_SUIT");
 
-    if (it2 != inventory.end()) {
+    if (hasSPACE_SUIT && !openedSS) {
       //it means the player has the SPACE_SUIT
       Airlock -> addLinkedRoom(Space, "SOUTH");
       Space -> addLinkedRoom(Airlock, "NORTH");
       ShuttleDock -> addLinkedRoom(HallD, "WEST");
       HallD -> addLinkedRoom(ShuttleDock, "EAST");
+      openedSS = true;
     }
-    else {
+    else if (!hasSPACE_SUIT && openedSS) {
       Airlock -> removeLinkedRoom("SOUTH");
       Space -> removeLinkedRoom("NORTH");
       ShuttleDock -> removeLinkedRoom("WEST");
       HallD -> removeLinkedRoom("EAST");
+      openedSS = false;
     }
 
-    auto it3 = find(inventory.begin(), inventory.end(), "SHUTTLE_KEY");
 
-    if (it3 != inventory.end()) {
+    if (hasSHUTTLE_KEY && !openedSK) {
       //the player has the shuttle key
       Shuttle -> addLinkedRoom(ShuttleDock, "WEST");
       ShuttleDock -> addLinkedRoom(Shuttle, "EAST");
+      openedSK = true;
     }
-    else {
+    else if (!hasSHUTTLE_KEY && openedSK) {
       Shuttle -> removeLinkedRoom("WEST");
       ShuttleDock -> removeLinkedRoom("EAST");
+      openedSK = false;
     }
 		    
   } while (strcmp(input, "QUIT") != 0);
@@ -205,7 +238,6 @@ void processInput(char* input, Room* &room, vector<char*> &inventory) {
     strcpy(inKey, input);
   }
 
-  cout << inKey << endl;
   
   /*
     VALID KEYWORDS:
