@@ -107,6 +107,9 @@ int main() {
 
   Space -> addItem("SHUTTLE_KEY");
 
+  //REMOVE THIS ITEM LATER
+  Dorm1 -> addItem("ID_CARD");
+
 
   //setup for input
   char* input = new char[80];
@@ -221,6 +224,7 @@ int main() {
 		    
   } while (strcmp(input, "QUIT") != 0);
 
+  cout << "HIT QUIT CONDITION" << endl;
   return 0;
 }
 
@@ -232,12 +236,14 @@ void processInput(char* input, Room* &room, vector<char*> &inventory) {
   bool hasSpace = false;
   if (strchr(input, ' ') != NULL) {
     strncpy(inKey, input, strchr(input, ' ') - input);
+    inKey[strchr(input, ' ') - input] = '\0';
     hasSpace = true;
   }
   else {
     strcpy(inKey, input);
   }
 
+  cout << "Key: " << inKey << endl;
   
   /*
     VALID KEYWORDS:
