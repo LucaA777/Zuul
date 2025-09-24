@@ -1,3 +1,12 @@
+/*
+A simple game of Zuul set in an abandoned space station.
+Players can navigate through the rooms and interact with items.
+Some of the items unlock new paths which are necessary for completing
+the mission.
+  
+Author: Luca Ardanaz
+Last Updated: 9/24/2025
+ */
 #include <iostream>
 #include <cstring>
 #include <vector>
@@ -35,7 +44,7 @@ int main() {
 
   Room* MainSpace = new Room("You find yourself in a large open space. It looks like things were left in a mess.");
 
-  Room* Gym = new Room("You are in the gym. There are a lot of fancy machines here, must  have been expensive.");
+  Room* Gym = new Room("You are in the gym. There are a lot of fancy machines here, must  have been expensive. Wait how are dumbells supposed to work in space?");
 
   Room* HallA = new Room("You are in a long hallway, there are locked doors on either side, looks like you might need some kind of identification...");
 
@@ -106,9 +115,6 @@ int main() {
   HallD -> addItem("SPACE_SUIT");
 
   Space -> addItem("SHUTTLE_KEY");
-
-  //REMOVE THIS ITEM LATER
-  Dorm1 -> addItem("ID_CARD");
 
 
   //setup for input
@@ -222,9 +228,16 @@ int main() {
       openedSK = false;
     }
 		    
-  } while (strcmp(input, "QUIT") != 0);
+  } while (strcmp(input, "QUIT") != 0 && strcmp(currentRoom -> getDescription(), Shuttle -> getDescription()) != 0);
 
-  cout << "HIT QUIT CONDITION" << endl;
+  if (strcmp(input, "QUIT") == 0) {
+    //means the player quit
+    cout << "Awww, you'll get it next time!" << endl;
+  }
+  else {
+    //means the player won
+    cout << "Great work!!!" << endl;
+  }
   return 0;
 }
 
@@ -243,7 +256,6 @@ void processInput(char* input, Room* &room, vector<char*> &inventory) {
     strcpy(inKey, input);
   }
 
-  cout << "Key: " << inKey << endl;
   
   /*
     VALID KEYWORDS:

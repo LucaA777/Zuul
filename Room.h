@@ -1,3 +1,13 @@
+/*
+This class handles a room for a game of Zuul.
+It stores all the exits and the rooms they go to,
+has a description of the room, and holds items that
+are dropped into the room.
+  
+Author: Luca Ardanaz
+Last Updated: 9/24/2025
+ */
+
 #ifndef ROOM_H
 #define ROOM_H
 

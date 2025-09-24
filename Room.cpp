@@ -32,15 +32,17 @@ void Room::addLinkedRoom(Room* nRoom, const char nExit[20]) {
 }
 
 void Room::removeLinkedRoom(const char nExit[20]) {
-  cout << "Entered exit removal method" << endl;
-  char* exit = new char[20];
-  strcpy(exit, nExit);
-  cout << "Exit: " << exit << endl;
-  map<char*, Room*>::iterator it = linkedRooms.find(exit);
-  cout << "Iteration successful" << endl;
-  //  cout << "Attempting to delete: " << (it -> second -> getDescription()) << endl;
-  linkedRooms.erase(exit);
-  cout << "Code didn't die at delete." << endl;
+  char* exitCStr = new char[20];
+  strcpy(exitCStr, nExit);
+  
+  for (int i = 0; i < linkedRooms.size(); i++) {
+    if (strcmp((next(linkedRooms.begin(), i)) -> first, exitCStr) == 0) {
+      delete &(*next(linkedRooms.begin(), i));
+      linkedRooms.erase(next(linkedRooms.begin(), i));
+      break;
+    }
+  }
+  
 }
 
 map<char*, Room*> Room::getLinkedRooms() {
