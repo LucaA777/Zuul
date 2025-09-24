@@ -15,6 +15,12 @@ Room::Room(const char nDescription[200]) {
   strcpy(description, nDescription);
 }
 
+Room::~Room() {
+  delete description;
+  linkedRooms.clear();
+  items.clear();
+}
+
 void Room::setDescription(const char nDescription[200]) {
   description = new char[200];
   strcpy(description, nDescription);
@@ -34,7 +40,10 @@ void Room::addLinkedRoom(Room* nRoom, const char nExit[20]) {
 void Room::removeLinkedRoom(const char nExit[20]) {
   char* exitCStr = new char[20];
   strcpy(exitCStr, nExit);
-  
+
+  //goes through all the rooms and checks if the exit strings match
+  //unfortunately, the find() command through an iterator doesn't work
+  //because it checks for the exact pointer, not the value its pointing to.
   for (int i = 0; i < linkedRooms.size(); i++) {
     if (strcmp((next(linkedRooms.begin(), i)) -> first, exitCStr) == 0) {
       delete &(*next(linkedRooms.begin(), i));

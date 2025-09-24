@@ -21,7 +21,8 @@ class Room {
  public:
 
   Room(const char nDescription[200]);
-
+  ~Room();
+  
   void setDescription(const char nDescription[200]);
   char* getDescription();
 
